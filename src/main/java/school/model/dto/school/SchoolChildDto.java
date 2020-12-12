@@ -1,4 +1,4 @@
-package school.model.dto.schoolChild;
+package school.model.dto.school;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -11,11 +11,9 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Schema(description = "Объект школьников")
-public class SchoolChildDtoSave {
-    @Schema(description = "Фамилия", example = "Петров")
+public class SchoolChildDto {
+    @Schema(description = "Фамилия")
     String surname;
-    @Schema(description = "Имя", example = "Иван")
+    @Schema(description = "Имя")
     String name;
-    @Schema(description = "Учебное заведение")
-    SchoolDto school;
 }

@@ -12,6 +12,7 @@ import school.model.dto.schoolChild.SchoolChildDtoSave;
 import school.model.entity.SchoolChild;
 import school.model.mapper.SchoolChildMapper;
 import school.repo.SchoolChildRepo;
+import school.repo.SchoolRepo;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,29 +25,39 @@ public class SchoolChildServiceImpl implements SchoolChildService {
 
     SchoolChildRepo repo;
 
+    SchoolRepo repoSchool;
+
     SchoolChildMapper mapper;
 
     @Transactional(propagation = Propagation.NEVER)
     @Override
     public List<SchoolChildDto> getAll() {
         return Lists.newArrayList(repo.findAll()).stream()
-                .map(schoolchild -> mapper.schoolChildToSchoolChildDto(schoolchild))
+                    .map(schoolchild -> mapper.schoolChildToSchoolChildDto(schoolchild))
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(propagation = Propagation.NEVER)
+    @Override
+    public SchoolChildDto getById(Long id) {
+        return mapper.schoolChildToSchoolChildDto(repo.findById(id).get());
     }
 
     @Override
     public void add(SchoolChildDtoSave schoolChildDtoSave) {
-        System.out.println(schoolChildDtoSave);
         SchoolChild schoolChild = mapper.schoolChildDtoToSchoolChild(schoolChildDtoSave);
-        System.out.println(schoolChild);
+        schoolChild.setSchool(repoSchool.getSchoolByNumber(
+                schoolChild.getSchool().getNumber()).get());
         repo.save(schoolChild);
     }
 
     @Override
-    public void edit(Long id, SchoolChildDtoSave schoolchildDtoSave) {
-        SchoolChild schoolchild = mapper.schoolChildDtoToSchoolChild(schoolchildDtoSave);
-        schoolchild.setId(id);
-        repo.save(schoolchild);
+    public void edit(Long id, SchoolChildDtoSave schoolChildDtoSave) {
+        SchoolChild schoolChild = mapper.schoolChildDtoToSchoolChild(schoolChildDtoSave);
+        schoolChild.setId(id);
+        schoolChild.setSchool(repoSchool.getSchoolByNumber(
+                schoolChild.getSchool().getNumber()).get());
+        repo.save(schoolChild);
     }
 
     @Override

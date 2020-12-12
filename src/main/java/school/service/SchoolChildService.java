@@ -9,6 +9,8 @@ public interface SchoolChildService {
 
     List<SchoolChildDto> getAll();
 
+    SchoolChildDto getById(Long id);
+
     void add(SchoolChildDtoSave schoolChildDtoSave);
 
     void edit(Long id, SchoolChildDtoSave schoolChildDtoSave);
